@@ -12,6 +12,7 @@ const ConferenceEvent = () => {
     const dispatch = useDispatch();
     const remainingAuditoriumQuantity = 3 - venueItems.find(item => item.name === "Auditorium Hall (Capacity:200)").quantity;
 
+    const avTotalCost=calculateTotalCost("av")
     
     const handleToggleItems = () => {
         console.log("handleToggleItems called");
@@ -57,6 +58,11 @@ const ConferenceEvent = () => {
           venueItems.forEach((item) => {
             totalCost += item.cost * item.quantity;
           });
+        }else if(section==="av"){
+          avItems.forEach((item)=>{
+            totalCost+=item.cost+item.quantity
+          })
+
         }
         return totalCost;
       };
@@ -178,6 +184,7 @@ const ConferenceEvent = () => {
 ))}
 
                                 </div>
+                                <div className="total_cost">Total Cost: {avTotalCost}</div>
                                 <div className="total_cost">Total Cost:</div>
 
                             </div>
