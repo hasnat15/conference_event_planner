@@ -16,6 +16,12 @@ const ConferenceEvent = () => {
 
     const avTotalCost=calculateTotalCost("av")
     const mealsTotalCost= calculateTotalCost("meals")
+
+    const totalCost={
+      venue: venueTotalCost,
+      av:avTotalCost,
+      meals: mealsTotalCost
+    }
     
     const handleToggleItems = () => {
         console.log("handleToggleItems called");
@@ -58,6 +64,13 @@ const ConferenceEvent = () => {
 
     const getItemsFromTotalCost = () => {
         const items = [];
+        venueItems.forEach((item)=>{
+          if(item.quantity>0){
+            items.push({...item, type:"venue"})
+          }
+          //resume from here.
+        });
+
     };
 
     const items = getItemsFromTotalCost();
@@ -259,7 +272,7 @@ const ConferenceEvent = () => {
 
 
             </div>
-        </>
+        </> 
 
     );
 };
