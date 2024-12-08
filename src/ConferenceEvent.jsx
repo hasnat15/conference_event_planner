@@ -4,15 +4,18 @@ import TotalCost from "./TotalCost";
 import { useSelector, useDispatch } from "react-redux";
 import { incrementQuantity, decrementQuantity } from "./venueSlice";
 import { incrementAvQuantity, decrementAvQuantity } from "./avSlice";
+import { toggleMealSelection } from "./mealsSlice";
 const ConferenceEvent = () => {
     const [showItems, setShowItems] = useState(false);
     const [numberOfPeople, setNumberOfPeople] = useState(1);
     const venueItems = useSelector((state) => state.venue);
+    const mealsItems=useSelector((state)=>state.meals)
     const avItems=useSelector((state)=>state.av)
     const dispatch = useDispatch();
     const remainingAuditoriumQuantity = 3 - venueItems.find(item => item.name === "Auditorium Hall (Capacity:200)").quantity;
 
     const avTotalCost=calculateTotalCost("av")
+    const mealsTotalCost= calculateTotalCost("meals")
     
     const handleToggleItems = () => {
         console.log("handleToggleItems called");
@@ -40,6 +43,16 @@ const ConferenceEvent = () => {
     };
 
     const handleMealSelection = (index) => {
+
+      const item=mealsItems[index]
+
+      if (item.selected && item.type === "meal for people"){
+        const newNumberOfPeople=item.selected ? newNumberOfPeople:0
+        dispatch(toggleMealSelection(index, newNumberOfPeople))
+      }else{
+        dispatch(toggleMealSelection(index))
+      }
+        
        
     };
 
@@ -63,6 +76,12 @@ const ConferenceEvent = () => {
             totalCost+=item.cost+item.quantity
           })
 
+        }else if(section==="meals"){
+          mealsItems.forEach((item)=>{
+            if(item.selected){
+              totalCost += item.cost * numberOfPeople;
+            }
+          })
         }
         return totalCost;
       };
@@ -184,8 +203,8 @@ const ConferenceEvent = () => {
 ))}
 
                                 </div>
-                                <div className="total_cost">Total Cost: {avTotalCost}</div>
-                                <div className="total_cost">Total Cost:</div>
+                                
+                                <div className="total_cost">Total Cost:{avTotalCost}</div>
 
                             </div>
 
@@ -199,12 +218,32 @@ const ConferenceEvent = () => {
                                 </div>
 
                                 <div className="input-container venue_selection">
+                                  <label htmlFor="numberOfPeople">
+                                    <h3>Number of People</h3>
+                                  </label>
+                                  <input type="number" className="input_box" id="numbeOfPeople" value={numberOfPeople}
+                                  onChange={(e)=>setNumberOfPeople(parseInt(e.target.value))}
+                                  />
 
                                 </div>
                                 <div className="meal_selection">
+                                  {mealsItems.map((item,index)=>(
+                                    <div className="meal_item" key={index} style={{padding:15}}>
+                                      <div className="inner">
+                                        <input
+                                        type="checkbox" id={`meal_${index}`}
+                                        checked={items.selected}
+                                        onChange={()=>handleMealSelection(index)}
+                                        />
+                                          <label htmlFor={`meal_${index}`}> {item.name} </label>
+                                          
+                                        </div>
+                                        <div className="meal_cost">${item.cost}</div>
+                                    </div>
+                                  ))}
 
                                 </div>
-                                <div className="total_cost">Total Cost: </div>
+                                <div className="total_cost">Total Cost:{mealsTotalCost} </div>
 
 
                             </div>
