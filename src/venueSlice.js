@@ -27,7 +27,7 @@ export const venueSlice = createSlice({
       name: "Large Meeting Room (Capacity:10)",
       cost: 900,
       quantity: 0,
-    },
+    },  
     {
       img: "https://pixabay.com/images/download/laptops-593296_640.jpg",
       name: "Small Meeting Room (Capacity:5)",
