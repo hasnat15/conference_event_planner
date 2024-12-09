@@ -68,8 +68,27 @@ const ConferenceEvent = () => {
           if(item.quantity>0){
             items.push({...item, type:"venue"})
           }
-          //resume from here.
+         
         });
+        avItems.forEach((item)=>{
+          if(item.quantity>0 &&!items.some((i)=>i.name&&i.type === "av"))
+          {
+            items.push({...items, type:"av"})
+          }
+        })
+
+        mealsItems.forEach((item)=>{
+          if(item.selected){
+            const itemForDisplay ={...item, type:"meals"}
+            if (item.numberOfPeople){
+              itemForDisplay.numberOfPeople=numberOfPeople
+
+            }
+            item.push(itemForDisplay)
+          }
+
+        })
+        return items;
 
     };
 
